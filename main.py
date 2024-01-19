@@ -1,4 +1,4 @@
-#a app to generate passwords and save data for each website
+#a app to generate passwords and save data for each website, the interface may be confuse if you're not on windows
 
 from tkinter import *
 from tkinter import messagebox
@@ -48,15 +48,18 @@ def save():
     
 # ---------------------------- UI SETUP ------------------------------- #
 
+#create window
 window = Tk()
 window.title("Password Manager")
 window.config(padx=20, pady=20)
 
+#put image
 canvas = Canvas(width=200, height=200)
 logo_img = PhotoImage(file="logo.png")
 canvas.create_image(100, 100, image=logo_img)
 canvas.grid(column=1, row=0)
 
+#create labels, entry and buttons
 website_label = Label(text="Website:")
 website_label.grid(column=0, row=1)
 
@@ -82,4 +85,5 @@ add_button.grid(column=1, row=4, columnspan=2)
 generate_button = Button(text="Generate Password", command=generate_password)
 generate_button.grid(column=2, row=3)
 
+#app running
 window.mainloop()
