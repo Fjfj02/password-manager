@@ -4,6 +4,7 @@ from tkinter import *
 from tkinter import messagebox
 from random import choice, randint, shuffle
 from pyperclip import copy
+import json
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
@@ -33,18 +34,40 @@ def save():
     website = website_entry.get()
     email = email_entry.get()
     password = password_entry.get()
+    new_data = {
+        website: {
+            "email": email,
+            "password": password,
+        }
+    }
 
     if len(website) == 0 or len(password) == 0:
-        messagebox.showinfo(title="Oops", message="Please, fill all blanks!")
+        messagebox.showinfo(title="Oops", message="Please, fill all the blanks!")
 
     else:
         response = messagebox.askokcancel(title=website, message=f"These are the details entered: \nEmail: {email} \nPassword: {password} \nAre you sure?")
 
         if response:
-            with open("data.txt", "a") as data_file:
-                data_file.write(f"{website} | {email} | {password}\n")
+            try:
+                with open("data.json", "r") as data_file:
+                    #reading old data
+                    data = json.load(data_file)
+                    
+            except FileNotFoundError:
+                with open("data.json", "w") as data_file:
+                    json.dump(new_data, data_file, indent=4)
+
+            else:
+                #updating old data with new data
+                data.update(new_data)
+
+                with open("data.json", "w") as data_file:
+                    #saving updated data
+                    json.dump(data, data_file, indent=4)
+
+            finally:
                 website_entry.delete(0, END)
-                password_entry.delete(0, END)
+                password_entry.delete(0, END) 
     
 # ---------------------------- UI SETUP ------------------------------- #
 
@@ -59,7 +82,7 @@ logo_img = PhotoImage(file="logo.png")
 canvas.create_image(100, 100, image=logo_img)
 canvas.grid(column=1, row=0)
 
-#create labels, entry and buttons
+#create labels, entries and buttons
 website_label = Label(text="Website:")
 website_label.grid(column=0, row=1)
 
