@@ -1,4 +1,5 @@
 #a app to generate passwords and save data for each website, the interface may be confuse if you're not on windows
+#you can change the default email and delete json file
 
 from tkinter import *
 from tkinter import messagebox
@@ -26,6 +27,27 @@ def generate_password():
     password = "".join(password_list)
     password_entry.insert(0, password)
     copy(password)
+
+# ---------------------------- FIND PASSWORD ------------------------------- #
+    
+def find_password():
+    '''function to search button'''
+    website = website_entry.get()
+    try:
+        with open("data.json") as data_file:
+            data = json.load(data_file)
+
+    except FileNotFoundError:
+        messagebox.showinfo(title="Error", message="Try a valid entry!")
+
+    else:
+            if website in data:
+                email = data[website]["email"]
+                password = data[website]["password"]
+                messagebox.showinfo(title=website, message=f"Email: {email}\nPassword: {password}")
+
+            else:
+                messagebox.showinfo("error", message=f"Try a valid entry!")
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 
@@ -92,8 +114,8 @@ email_label.grid(column=0, row=2)
 password_label = Label(text="Password:")
 password_label.grid(column=0, row=3)
 
-website_entry = Entry(width=52)
-website_entry.grid(column=1, row=1, columnspan=2)
+website_entry = Entry(width=33)
+website_entry.grid(column=1, row=1)
 
 email_entry = Entry(width=52)
 email_entry.grid(column=1, row=2, columnspan=2)
@@ -105,8 +127,11 @@ password_entry.grid(column=1, row=3)
 add_button = Button(text="Add", width=44, command=save)
 add_button.grid(column=1, row=4, columnspan=2)
 
-generate_button = Button(text="Generate Password", command=generate_password)
+generate_button = Button(text="Generate Password", width = 14, command=generate_password)
 generate_button.grid(column=2, row=3)
+
+search_button = Button(text="Search", width = 14, command=find_password)
+search_button.grid(column=2, row=1)
 
 #app running
 window.mainloop()
